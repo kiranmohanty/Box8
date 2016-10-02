@@ -1,0 +1,61 @@
+create database Box8
+
+create table Country
+(
+CountryID int identity (1,1) primary key,
+CountryName nvarchar(max) not null,
+Currency nvarchar(5)
+)
+create table State
+(
+StateID int identity (1,1) primary key,
+CountryID int references Country(CountryID),
+StateName nvarchar(max) not null
+)
+create table City
+(
+--Bagalore
+CityID int identity (1,1) primary key,
+StateID int references State (StateID),
+CityName nvarchar(max) not null
+)
+create table City_SubLocation
+(
+--- BTM
+SubLocationID int identity (1,1) primary key,
+CityID int references City (CityID),
+SubLocationName nvarchar(max) not null
+)
+
+Create table LocalArea
+(
+-- axa
+LocalAreaID int identity(1,1) primary key,
+SubLocationID int references City_SubLocation(SubLocationID),
+AreaName nvarchar(max) not null
+)
+
+Create table Main_Menu_Category
+(
+CategoryID int identity(1,1) primary key,
+CategoryName nvarchar(250) not null,
+CategoryImage nvarchar(max)
+)
+
+create table Category_Items
+(
+ItemID int identity (1,1) primary key,
+CategoryID int references Main_Menu_Category(CategoryID),
+ItemType int,--Enum value 0- Veg,1-non-veg,
+MenuName nvarchar(max) not null,
+MenuDescription nvarchar(max) not null,
+Price decimal not null,
+ItemImage nvarchar(max),
+)
+
+create table localAreaMenuItems
+(
+UniqueID int identity (1,1) primary key,
+ItemID int references Category_Items(ItemID),
+AreaID int references LocalArea(LocalAreaID)
+)
