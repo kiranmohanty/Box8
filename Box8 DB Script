@@ -59,3 +59,33 @@ UniqueID int identity (1,1) primary key,
 ItemID int references Category_Items(ItemID),
 AreaID int references LocalArea(LocalAreaID)
 )
+
+
+insert into Country (CountryName,Currency) values('India','INR')
+insert into State ( StateName,CountryID) values('Karnataka',1)
+insert into City ( CityName,StateID) values ( 'Bangalore',1)
+insert into City_SubLocation ( CityID,SubLocationName) values (1,'BTM'),(1,'Koramangala'),(1,'Marathahali'),(1,'ITPL')
+insert into LocalArea ( SubLocationID,AreaName)  values (1,'Axa Building'),(1,'16th Main'), (1,'Water tank'),(2,'NGV'),(3,'Marathali bridge'),(4,'Back gate')
+
+
+
+
+create procedure dbo.GetSearchedLocationdetails(
+ @SearchedLocation  nvarchar(max)
+)
+as
+begin
+
+select AreaName as AreaName,LocalAreaID as AreaID,2 as IsLocalArea
+from dbo.LocalArea  with(nolock)
+where AreaName like '%'+@SearchedLocation+'%'
+union all
+select SubLocationName as AreaName,SubLocationID as AreaID,1 as IsLocalArea
+from City_SubLocation
+where SubLocationName like '%'+@SearchedLocation+'%'
+union all
+select CityName as AreaName,CityID as AreaID,0 as IsLocalArea
+from City
+where CityName like '%'+@SearchedLocation+'%'
+
+end
