@@ -2,18 +2,18 @@
 <header>
 <style>
  .imgSmall{
- height: 50px;
+    height: 50px;
  }
-  .imgLarge{
- height: 700px;
- width:1870px;
- padding-left:0px;
+.imgLarge{
+    height: 700px;
+    width:1870px;
+    padding-left:0px;
  }
 .margin-top-20px{
- margin-top:20px;
+    margin-top:20px;
  }
  .padding-left-5px{
- padding-left:5px;
+    padding-left:5px;
  }
  .home1{
     height: 55px;
@@ -104,6 +104,29 @@
  input:focus{
     outline: none;
 }
+.text-center{
+    text-align: center;
+}
+.menuImage{
+    margin-bottom: 30px!important;
+	box-shadow: 6px 6px 10px #888;
+    padding: 0;
+	height: 218px;
+    width:373px;
+}
+.menuText{
+    margin-top: -64px;
+    padding-left: 20px;
+    font-size: 21px;
+    color: #fff;
+	text-transform: uppercase;
+}
+.margin-top-13px{
+     margin-top:13px;
+}
+.white-smoke{
+    background-color: whitesmoke;
+}
 </style>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-animate.js"></script>
@@ -131,7 +154,7 @@
      </div>
 	 
 	 
-	 <div class="col-md-12 padding-left-zero">
+	 <div class="col-md-12 padding-left-zero" ng-show="ShowLocationSearchDiv">
 	  <img class="imgLarge padding-left-zero col-md-12" src="https://box8.in/images/banner/B8-FINAL-WEB-BANNER.d975a91b.jpg" href="X"/>
 	 <div style="padding-top:80px;" class="col-md-6">
 	 
@@ -142,17 +165,31 @@
 	 </span>
 	 </div>
 	 <input type="text"  id="txtLocation"  ng-model="SearchedLocation" ng-class="ParentLocation.length>0 ?  'home2 col-md-8' : 'home1 col-md-10'"  placeholder="{{LocateMePlaceHolder}}" ng-change="LocateDeliveryLocation()" />
-	 <button id="btnLocateMe" class="btn btn-red col-md-2" ng-disabled="DisableSearch" ng-class="ParentLocation.length>0 ? 'locateMe2':'locateMe1'" >Locate Me</button>	
+	 <button id="btnLocateMe" class="btn btn-red col-md-2" ng-disabled="DisableSearch" ng-class="ParentLocation.length>0 ? 'locateMe2':'locateMe1'" ng-click="DisplayMenuList()" >Locate Me</button>	
 	  </div> 
 	<div class="col-md-12" ng-show="ShowLocationList">
-        <ul class="autocomplatePopup list-group" ng-model="selectedLocation">
-		   <li class="list-group-item" ng-repeat="item in LocationList | filter:SearchedLocation.name" ng-bind="item.name" ng-click="SelectLocation(item.ID,item.name,item.Type,item.ParentID)"></li>           
+        <ul class="autocomplatePopup list-group" ng-model="selectedLocationID">
+		   <li class="list-group-item" ng-repeat="item in GetAvailableLocations() | filter:{name:SearchedLocation} | orderBy : 'name'" ng-bind="item.name" ng-click="SelectLocation(item.ID,item.name,item.Type,item.ParentID)"></li>           
 		   </ul>	
 	</div>
      </div>	 
 	 </div>
-	
- </div>
+
+
+   <div class="col-md-12 white-smoke" ng-show="ShowMenuList" >
+         <span class="col-md-12 text-center" menu-List-Header></span> 
+		 <div class="col-md-2"></div>
+		 <div class="col-md-8">
+		    <div class="col-md-12">
+			    <div  class="col-md-4 margin-top-13px" ng-repeat="category in CategoryList">
+				   <img ng-src="{{category.Image}}" alt="{{category.CategoryName}}" class="menuImage"></img>
+				   <div ng-bind="category.CategoryName" class="menuText"></div>
+				</div>
+			</div>
+		 </div>
+		 <div class="col-md-2"></div>
+   </div>	
+</div>
 </body>
 <script type="text/javascript">
     var app=angular.module("Box8App",['ngAnimate']);
@@ -163,6 +200,8 @@
 	$scope.DisableSearch=true;
 	$scope.FilteredLocationList=[];
 	$scope.ShowLocationList=false;
+	$scope.ShowLocationSearchDiv=true;
+	$scope.ShowMenuList=false;
 	$scope.ParentLocation="";
 	$scope.LocationList=[
 	          {ID:1,name:"Bangalore",Type:"Main",ParentID:0},
@@ -181,45 +220,79 @@
 			  {ID:15,name:"Forum",Type:"DelivLocation",ParentID:5},
 			  {ID:15,name:"Banasankari Deport",Type:"DelivLocation",ParentID:6}
 			  ];
-    
+    $scope.CategoryList=[
+	           {CategoryID:1, CategoryName: "All-In-1-Meal", Image:"http://assets.box8.co.in/picture_resolutions/photos/000/000/406/original/1110-X-810.jpg?1468821535"},
+			   {CategoryID:2, CategoryName: "100% Natural Ice creams", Image:"http://assets.box8.co.in/picture_resolutions/photos/000/000/698/original/vegan-mixed-berry.jpg?1463149241"},
+			   {CategoryID:3, CategoryName: "Staples Box", Image:"http://assets.box8.co.in/picture_resolutions/photos/000/000/761/original/Paneer-Makhni-Meal.jpg?1463990830"},
+			   {CategoryID:4, CategoryName: "Biryani", Image:"http://assets.box8.co.in/picture_resolutions/photos/000/000/401/original/1110-X-810.jpg?1447237189"},
+			   {CategoryID:5, CategoryName: "Wraps", Image:"http://assets.box8.co.in/picture_resolutions/photos/000/000/402/original/1480-X-1080.jpg?1447237389"},
+			   {CategoryID:6, CategoryName: "Sandwitches", Image:"http://assets.box8.co.in/picture_resolutions/photos/000/000/403/original/1110-X-810.jpg?1447237540"},
+			   {CategoryID:7, CategoryName: "Salads", Image:"http://assets.box8.co.in/picture_resolutions/photos/000/000/475/original/Farmer's-Market-Salad.jpg?1449813576"},
+			   {CategoryID:8, CategoryName: "A La Carte", Image:"http://assets.box8.co.in/picture_resolutions/photos/000/000/404/original/1110-X-810.jpg?1450536795"},
+			   {CategoryID:9, CategoryName: "Drinks & Desserts", Image:"http://assets.box8.co.in/picture_resolutions/photos/000/000/407/original/1110-X-810.jpg?1453964426"}
+	];
 	
 	//Functions
+	$scope.GetAvailableLocations=function(){
+	     $scope.FilteredLocationList.length=0;
+	      if($scope.selectedLocationID !=undefined && $scope.selectedLocationID>0){
+		        for ( var i=0; i< $scope.LocationList.length; i++)
+		             {
+					   if($scope.LocationList[i].ParentID==$scope.selectedLocationID)
+					   {
+					       $scope.FilteredLocationList.push($scope.LocationList[i]);
+					   }
+		             }	
+                return $scope.FilteredLocationList;					 
+	        }
+			else{
+			    return $scope.LocationList;
+			}			
+	}
      $scope.LocateDeliveryLocation=function(){
 	         $scope.DisableSearch=true;
-			 $scope.LocateMePlaceHolder="Delivery Location eg.Bangalore";
-	     if($scope.SearchedLocation !=undefined && $scope.SearchedLocation.length>0){
+			 $scope.selectedLocationID=0;
+			 $scope.LocateMePlaceHolder=($scope.ParentLocation!=undefined && $scope.ParentLocation.length>0)?"Where in "+$scope.ParentLocation : "Delivery Location eg.Bangalore";
+	     if($scope.SearchedLocation != undefined && $scope.SearchedLocation.length > 0){
 		     $scope.ShowLocationList = true;
 	      }
 		  else{
-		     $scope.ShowLocationList=false;
+		     $scope.ShowLocationList = false;
 		  }
 	    }
 	 $scope.SelectLocation=function(id,text,type,parentID){
-	       $scope.selectedLocation=id;
+	       $scope.selectedLocationID=id;
 		   $scope.SearchedLocation="";
 		   $scope.ShowLocationList=false;
 		   if(type=="DelivLocation"){
 		      $scope.DisableSearch=false;
 			  $scope.LocateMePlaceHolder="";
+			  $scope.ParentLocation="";
+			  $scope.SearchedLocation=text;
 		   }
 		   else{
 		      $scope.ParentLocation=text;
 		      $scope.LocateMePlaceHolder ="Where in " + text;
-		   }
-	       alert($scope.selectedLocation);
+		   }	       
 	    }
 	 $scope.RemoveSelection=function(){
-	         $scope.selectedLocation=0;
+	         $scope.selectedLocationID=0;
 		     $scope.SearchedLocation="";
 			 $scope.LocateMePlaceHolder="Delivery Location eg.Bangalore";
 			 $scope.ShowLocationList=false;
+			 $scope.ParentLocation="";
 	    }
+	 $scope.DisplayMenuList=function(){
+	       $scope.ShowLocationSearchDiv=false;
+	       $scope.ShowMenuList=true;
+	   }
 	});
 	
 	//Registering directive
-	app.directive("parentLocation",function(){
+	app.directive("menuListHeader",function(){
 	   return{
-	        template:"hello"
+	        restrict: 'A',
+	        template:"<h3>What would you like to eat today ?</h3>"
 	       }
 	});
 </script>
