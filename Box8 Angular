@@ -40,6 +40,7 @@
 	margin-top: -400px;
 	padding-left:30px;
 	background-color:#da3939;
+	cursor:default;
  }
   .locateMe2{
     height: 55px;
@@ -49,6 +50,7 @@
 	margin-top: -55px;
 	padding-left:30px;
 	background-color:#da3939;
+	cursor:pointer;
  }
  .sign-up{
     border: 1px solid #e13636!important;
@@ -113,6 +115,7 @@
     padding: 0;
 	height: 218px;
     width:373px;
+	cursor:pointer;
 }
 .menuText{
     margin-top: -64px;
@@ -126,6 +129,10 @@
 }
 .white-smoke{
     background-color: whitesmoke;
+}
+.locationInfoHeader{
+background-color:black;
+color: #fff;
 }
 </style>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
@@ -182,13 +189,22 @@
 		 <div class="col-md-8">
 		    <div class="col-md-12">
 			    <div  class="col-md-4 margin-top-13px" ng-repeat="category in CategoryList">
-				   <img ng-src="{{category.Image}}" alt="{{category.CategoryName}}" class="menuImage"></img>
+				   <img ng-src="{{category.Image}}" alt="{{category.CategoryName}}" class="menuImage" ng-click="ShowItems(category.CategoryID)"></img>
 				   <div ng-bind="category.CategoryName" class="menuText"></div>
 				</div>
 			</div>
 		 </div>
 		 <div class="col-md-2"></div>
-   </div>	
+   </div>
+
+   <div class="col-md-12" ng-show="ShowItemList">
+        <div class="col-md-12 locationInfoHeader">
+		   <div class="col-md-1" ></div>
+		   <div class="col-md-4">
+		      <span class="col-md-6 " style="color:#fff;" text="{{ShowDeliveryLocationPath()}}"></span>
+		   </div>
+		</div>
+   </div>   
 </div>
 </body>
 <script type="text/javascript">
@@ -202,7 +218,9 @@
 	$scope.ShowLocationList=false;
 	$scope.ShowLocationSearchDiv=true;
 	$scope.ShowMenuList=false;
+	$scope.ShowItemList=false;
 	$scope.ParentLocation="";
+	$scope.LocationID=0;
 	$scope.LocationList=[
 	          {ID:1,name:"Bangalore",Type:"Main",ParentID:0},
 			  {ID:2,name:"Chennai",Type:"Main",ParentID:0},
@@ -231,6 +249,36 @@
 			   {CategoryID:8, CategoryName: "A La Carte", Image:"http://assets.box8.co.in/picture_resolutions/photos/000/000/404/original/1110-X-810.jpg?1450536795"},
 			   {CategoryID:9, CategoryName: "Drinks & Desserts", Image:"http://assets.box8.co.in/picture_resolutions/photos/000/000/407/original/1110-X-810.jpg?1453964426"}
 	];
+	$scope.Category_Items_List=[
+	           {ItemID :1,CategoryID :1,ItemType :0,MenuName :"Dal Makhni Meal",MenuDescription :"The best Dal makhni in town + Additional Chole/ Dal Makhni on the side + Salad/Chutney + Dessert",Price :128,ItemImage :"http://assets.box8.co.in/picture_resolutions/photos/000/000/610/original/1110-X-810.jpg?1468823971"  }, //ItemType:0- veg, 1- non-veg
+			   {ItemID :2,CategoryID :1,ItemType :0,MenuName :"Chole Tikki Meal",MenuDescription :"Delhi style Chole with Grilled veg patty on the side + Dal Makhni/Chole + Salad/Chutney + Dessert",Price :148,ItemImage :"http://assets.box8.co.in/picture_resolutions/photos/000/000/618/original/1110-X-810.jpg?1468823867"},
+			   {ItemID :3,CategoryID :1,ItemType :0,MenuName :"Spicy Paneer Meal",MenuDescription :"Melt-in-your-mouth paneer cubes with spicy curry + Dal Makhni/Chole + Salad/Chutney + Dessert",Price :158,ItemImage :"http://assets.box8.co.in/picture_resolutions/photos/000/000/617/original/1110-X-810.jpg?1468824632"},
+			   {ItemID :4,CategoryID :1,ItemType :1,MenuName :"Chicken Masala Meal",MenuDescription :"Lucknowi style Chicken with home style chicken curry + Dal Makhni/Chole + Salad/Chutney + Dessert",Price :178,ItemImage :"http://assets.box8.co.in/picture_resolutions/photos/000/000/640/original/1110-X-810.jpg?1468823352"},
+			   {ItemID :5,CategoryID :2,ItemType :0,MenuName :"Madagascar Chocolate [500 mL Family Pack]",MenuDescription :"Deliciously smooth, gooey, dark sinned and made from premium Chocolate. Best chocolate treat ever!",Price :288,ItemImage :"http://assets.box8.co.in/picture_resolutions/photos/000/000/692/original/1110-X-810-Ice-Cream.jpg?1476281424"},
+			   {ItemID :6,CategoryID :2,ItemType :0,MenuName :"Mixed Berries [500 mL Family Pack]",MenuDescription :"Delight yourself with delicious berry blast - Californian cranberry,  Blueberry and Strawberry",Price :288,ItemImage :"http://assets.box8.co.in/picture_resolutions/photos/000/000/691/original/1110-X-810-Ice-Cream.jpg?1476281859"},
+			   {ItemID :7,CategoryID :2,ItemType :0,MenuName :"Kesar Pista [500 mL Family Pack]",MenuDescription :"Treat yourself with rich flavours of high quality Roasted Pistas, pure Kesar and double cream milk",Price :248,ItemImage :"http://assets.box8.co.in/picture_resolutions/photos/000/000/674/original/1110-X-810-Ice-Cream.jpg?1476281271"},
+			   {ItemID :8,CategoryID :3,ItemType :1,MenuName :"Chicken Tikka over Rice",MenuDescription :"Chicken Tikka pieces cooked in a home style Curry. Enjoy with Rice, Salad, Mint Chutney and Garlic Yogurt.",Price :148,ItemImage :"http://assets.box8.co.in/picture_resolutions/photos/000/000/762/original/Chicken-Masala-Meal.jpg?1463990888"},
+			   {ItemID :9,CategoryID :3,ItemType :0,MenuName :"Paneer Masala over Rice",MenuDescription :"Melt in the mouth Paneer cubes with Salad, Mint Chutney and Garlic Yogurt over rice and Masala Curry.",Price :148,ItemImage :"http://assets.box8.co.in/picture_resolutions/photos/000/000/763/original/Spicy-Paneer-Meal.jpg?1463990913"},
+			   {ItemID :10,CategoryID :3,ItemType :0,MenuName :"Dal Makhni Chawal",MenuDescription :"The best Dal Makhni in town, Topped with Salad, Hari Chutney and a dash of fresh Garlic Yogurt. Life is sorted.",Price :108,ItemImage :"http://assets.box8.co.in/picture_resolutions/photos/000/000/765/original/Dal-Makhni-Meal.jpg?1463990943"},
+			   {ItemID :11,CategoryID :4,ItemType :0,MenuName :"Firangi Subz Biryani",MenuDescription :"Baby corn, mushroom & paneer. A burst of flavours",Price :158,ItemImage :"http://assets.box8.co.in/picture_resolutions/photos/000/000/408/original/Firangi-Subz-Biryani.jpg?1447238329"},
+			   {ItemID :12,CategoryID :4,ItemType :0,MenuName :"Shahi Paneer Biryani",MenuDescription :"Loads of tender marinated paneer cubes",Price :198,ItemImage :"http://assets.box8.co.in/picture_resolutions/photos/000/000/409/original/Shahi-Paneer-Biryani.jpg?1447238404"},
+			   {ItemID :13,CategoryID :4,ItemType :1,MenuName :"Murg Dum Biryani",MenuDescription :"The quintessential classic boneless chicken biryani",Price :208,ItemImage :"http://assets.box8.co.in/picture_resolutions/photos/000/000/410/original/Murg-Dum-Biryani.jpg?1447238710"},
+			   {ItemID :14,CategoryID :5,ItemType :0,MenuName :"Veg Tandoori Mix Wrap",MenuDescription :"Baby Corn, mushrooms, olives, jalapenos in a smoky sauce",Price :118,ItemImage :"http://assets.box8.co.in/picture_resolutions/photos/000/000/444/original/Veg-Tandoori-Mix-Wrap.jpg?1447241317"},
+			   {ItemID :15,CategoryID :5,ItemType :1,MenuName :"Seekh Kebab Wrap",MenuDescription :"Chicken kebabs roasted with a spicy sauce",Price :98,ItemImage :"http://assets.box8.co.in/picture_resolutions/photos/000/000/448/original/Seekh-Kebab-Wrap.jpg?1447241583"},
+			   {ItemID :16,CategoryID :5,ItemType :1,MenuName :"Chicken Tikka Wrap",MenuDescription :"Chicken kebab in a spicy tikka masala ",Price :138,ItemImage :"http://assets.box8.co.in/picture_resolutions/photos/000/000/451/original/Chicken-Tikka-Wrap.jpg?1447241774"},
+			   {ItemID :17,CategoryID :6,ItemType :1,MenuName :"Chicken Seekh Kebab Sandwich",MenuDescription :"Juicy spicy kebabs in a delicious tikka sauce",Price :108,ItemImage :"http://assets.box8.co.in/picture_resolutions/photos/000/000/424/original/Chicken-Seekh-Kebab-Sandwich.jpg?1447239743"},
+			   {ItemID :18,CategoryID :6,ItemType :1,MenuName :"Tandoori Chicken Sandwich ",MenuDescription :"The greatest chicken sandwich ever made. Seriously!",Price :148,ItemImage :"http://assets.box8.co.in/picture_resolutions/photos/000/000/426/original/Tandoori-Chicken-Sandwich.jpg?1447239873"},
+			   {ItemID :19,CategoryID :6,ItemType :0,MenuName :"Veggie Delight Sandwich",MenuDescription :"Loads of veggies with olives & jalapenos",Price :98,ItemImage :"http://assets.box8.co.in/picture_resolutions/photos/000/000/413/original/Veggie-Delight-Sandwich.jpg?1447238965"},
+			   {ItemID :20,CategoryID :7,ItemType :0,MenuName :"Farmer's Market Salad",MenuDescription :"Mushrooms, baby corn, olives, jalapenos with salad dressing",Price :138,ItemImage :"http://assets.box8.co.in/picture_resolutions/photos/000/000/476/original/Farmer's-Market-Salad.jpg?1448014807"},
+			   {ItemID :21,CategoryID :7,ItemType :1,MenuName :"Char-Grilled Chicken Salad",MenuDescription :"Tandoor grilled chicken & exotic veggies in a spiced desi dressing",Price :168,ItemImage :"http://assets.box8.co.in/picture_resolutions/photos/000/000/478/original/Char-Grilled-Chicken-Salad.jpg?1448014706"},
+			   {ItemID :22,CategoryID :7,ItemType :0,MenuName :"Paneer Tossed Salad",MenuDescription :"Paneer, olives, jalapenos, veggies in an Indian style dressing",Price :178,ItemImage :"http://assets.box8.co.in/picture_resolutions/photos/000/000/477/original/Tossed-Paneer-Salad.jpg?1448014770"},
+			   {ItemID :23,CategoryID :8,ItemType :0,MenuName :"Tawa Paratha [Pack of 2]",MenuDescription :"",Price :38,ItemImage :"http://assets.box8.co.in/picture_resolutions/photos/000/000/496/original/Tawa-Paratha.jpg?1448015912"},
+			   {ItemID :24,CategoryID :8,ItemType :0,MenuName :"Subz Handi Curry",MenuDescription :"Exotic mix veg in mughlai style gravy",Price :188,ItemImage :"http://assets.box8.co.in/picture_resolutions/photos/000/000/456/original/Subz-Handi-Curry.jpg?1447242249"},
+			   {ItemID :25,CategoryID :8,ItemType :1,MenuName :"Chicken Mughlai Curry",MenuDescription :"Delicious fusion of tandoori chicken & our signature spicy gravy",Price :238,ItemImage :"http://assets.box8.co.in/picture_resolutions/photos/000/000/462/original/Chicken-Mughlai-Curry.jpg?1447242614"},
+			   {ItemID :24,CategoryID :9,ItemType :0,MenuName :"Gulab Jamun",MenuDescription :"",Price :58,ItemImage :"http://assets.box8.co.in/picture_resolutions/photos/000/000/474/original/Gulab-Jamun.jpg?1447243895"},
+			   {ItemID :24,CategoryID :9,ItemType :0,MenuName :"Coke",MenuDescription :"Coke",Price :60,ItemImage :"http://assets.box8.co.in/picture_resolutions/photos/000/000/469/original/Aerated-Beverages.jpg?1447243460"},
+			   {ItemID :24,CategoryID :9,ItemType :0,MenuName :"Choco Lava Cake",MenuDescription :"",Price :58,ItemImage :"http://assets.box8.co.in/picture_resolutions/photos/000/000/602/original/Choco-Lava-Cake.jpg?1456988321"}
+	];
 	
 	//Functions
 	$scope.GetAvailableLocations=function(){
@@ -250,8 +298,7 @@
 			}			
 	}
      $scope.LocateDeliveryLocation=function(){
-	         $scope.DisableSearch=true;
-			 $scope.selectedLocationID=0;
+	         $scope.DisableSearch=true;			 
 			 $scope.LocateMePlaceHolder=($scope.ParentLocation!=undefined && $scope.ParentLocation.length>0)?"Where in "+$scope.ParentLocation : "Delivery Location eg.Bangalore";
 	     if($scope.SearchedLocation != undefined && $scope.SearchedLocation.length > 0){
 		     $scope.ShowLocationList = true;
@@ -264,11 +311,14 @@
 	       $scope.selectedLocationID=id;
 		   $scope.SearchedLocation="";
 		   $scope.ShowLocationList=false;
+		   $scope.LocationID=0;
 		   if(type=="DelivLocation"){
 		      $scope.DisableSearch=false;
 			  $scope.LocateMePlaceHolder="";
 			  $scope.ParentLocation="";
 			  $scope.SearchedLocation=text;
+			  $scope.selectedLocationID=0;
+			  $scope.LocationID=id;
 		   }
 		   else{
 		      $scope.ParentLocation=text;
@@ -277,6 +327,7 @@
 	    }
 	 $scope.RemoveSelection=function(){
 	         $scope.selectedLocationID=0;
+			 $scope.LocationID=0;
 		     $scope.SearchedLocation="";
 			 $scope.LocateMePlaceHolder="Delivery Location eg.Bangalore";
 			 $scope.ShowLocationList=false;
@@ -285,7 +336,25 @@
 	 $scope.DisplayMenuList=function(){
 	       $scope.ShowLocationSearchDiv=false;
 	       $scope.ShowMenuList=true;
+		   $scope.ShowItemList=false;
 	   }
+	 $scope.ShowItems=function(categoryID){
+	        $scope.ShowLocationSearchDiv=false;
+	        $scope.ShowMenuList=false;
+			$scope.ShowItemList=true;
+	    }
+	 $scope.ShowDeliveryLocationPath=function($filter,$scope){
+	        var finalLocationName="";
+	        var childLocation= $filter("filter")($scope.LocationList,{ID: $scope.LocationID});
+			if(childLocation !=undefined && childLocation.name.length>0){
+			    finalLocationName += childLocation.name ;
+				while(childLocation.ParentID==0)
+				{
+				    childLocation= $filter("filter")($scope.LocationList,{ID: childLocation.ParentID});
+					finalLocationName += ", "+childLocation.name ;
+				}
+			}
+	    }
 	});
 	
 	//Registering directive
