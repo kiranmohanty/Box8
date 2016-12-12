@@ -201,7 +201,7 @@ color: #fff;
         <div class="col-md-12 locationInfoHeader">
 		   <div class="col-md-1" ></div>
 		   <div class="col-md-4">
-		      <span class="col-md-6 " style="color:#fff;" text="{{ShowDeliveryLocationPath()}}"></span>
+		      <span class="col-md-6 " style="color:#fff;" text=""></span>
 		   </div>
 		</div>
    </div>   
@@ -209,7 +209,7 @@ color: #fff;
 </body>
 <script type="text/javascript">
     var app=angular.module("Box8App",['ngAnimate']);
-	app.controller("LocateMeController",function($scope){
+	app.controller("LocateMeController",['$scope','$filter',function($scope,$filter){
 	
 	//Properties
 	$scope.LocateMePlaceHolder="Delivery Location eg.Bangalore";
@@ -355,7 +355,7 @@ color: #fff;
 				}
 			}
 	    }
-	});
+	}]);
 	
 	//Registering directive
 	app.directive("menuListHeader",function(){
