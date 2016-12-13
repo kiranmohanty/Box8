@@ -133,6 +133,7 @@
 .locationInfoHeader{
 background-color:black;
 color: #fff;
+height:30px;
 }
 </style>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
@@ -201,7 +202,7 @@ color: #fff;
         <div class="col-md-12 locationInfoHeader">
 		   <div class="col-md-1" ></div>
 		   <div class="col-md-4">
-		      <span class="col-md-6 " style="color:#fff;" text=""></span>
+		      <span class="col-md-6 " style="color:#fff;" complete-Location></span>
 		   </div>
 		</div>
    </div>   
@@ -220,6 +221,7 @@ color: #fff;
 	$scope.ShowMenuList=false;
 	$scope.ShowItemList=false;
 	$scope.ParentLocation="";
+	$scope.CompleteLocationPath="";
 	$scope.LocationID=0;
 	$scope.LocationList=[
 	          {ID:1,name:"Bangalore",Type:"Main",ParentID:0},
@@ -342,6 +344,7 @@ color: #fff;
 	        $scope.ShowLocationSearchDiv=false;
 	        $scope.ShowMenuList=false;
 			$scope.ShowItemList=true;
+			//$scope.CompleteLocationPath=$scope.ShowDeliveryLocationPath();
 	    }
 	 $scope.ShowDeliveryLocationPath=function($filter,$scope){
 	        var finalLocationName="";
@@ -364,5 +367,23 @@ color: #fff;
 	        template:"<h3>What would you like to eat today ?</h3>"
 	       }
 	});
+	app.directive("completeLocation",['$filter','$scope',function($filter,$scope){
+	    return {
+		   //restrict:"A",
+		   template: function($filter,$scope){
+	                           var finalLocationName="";
+	                           var childLocation= $filter("filter")($scope.LocationList,{ID: $scope.LocationID});
+			                  if(childLocation !=undefined && childLocation.name.length>0){
+			                           finalLocationName += childLocation.name ;
+				                       while(childLocation.ParentID==0)
+				                         {
+				                            childLocation= $filter("filter")($scope.LocationList,{ID: childLocation.ParentID});
+					                        finalLocationName += ", "+childLocation.name ;
+				                         }
+			                        }
+			                return finalLocationName;
+	                    }
+	        }
+	}]);
 </script>
 </html>  
