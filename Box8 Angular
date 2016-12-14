@@ -106,6 +106,9 @@
  input:focus{
     outline: none;
 }
+ a:hover{
+    outline: none;
+}
 .text-center{
     text-align: center;
 }
@@ -131,9 +134,71 @@
     background-color: whitesmoke;
 }
 .locationInfoHeader{
-background-color:black;
-color: #fff;
-height:30px;
+   background-color:black;
+   color: #fff;
+   height:37px;
+}
+.white-text{
+   color:#fff;
+   padding-top:10px;
+   font:120%;
+}
+.padding-top-10px{
+    padding-top:10px;
+}
+.btn-as-text{
+    cursor: pointer;
+    background-color:black;
+	color: #fff;
+	border:0px;
+}
+.horizontal-scroller {
+    position: relative;
+    height: 65px;
+    background: #fff;
+    border-bottom: 1pX solid #E2E2E2;
+}
+.category-scrollbar {
+    overflow: hidden;
+    line-height: 64px;
+    text-align: center;
+}
+.menu-scroll {
+    display: inline-block;
+    padding-left: 25px;
+    padding-right: 25px;
+    text-align: center;
+}
+.category-horiezontal{
+    cursor: pointer;    
+	color: black;
+	border:0px;
+}
+.category-horiezontal:active{
+    text-decoration:none;
+	font-weight:500;
+}
+.left-arrow {
+    position: relative;
+    top: 1px;
+    display: inline-block;
+    font-family: 'Glyphicons Halflings';
+    font-weight: 400;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+}
+.right-arrow{
+    position: relative;
+    top: 1px;
+    display: inline-block;
+    font-family: 'Glyphicons Halflings';
+    font-weight: 400;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+}
+.left-arrow ,.right-arrow{
+     color: #da3939;
+	 cursor:pointer;
 }
 </style>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
@@ -200,10 +265,27 @@ height:30px;
 
    <div class="col-md-12" ng-show="ShowItemList">
         <div class="col-md-12 locationInfoHeader">
-		   <div class="col-md-1" ></div>
+		   
 		   <div class="col-md-4">
-		      <span class="col-md-6 " style="color:#fff;" complete-Location></span>
+		      <div class="col-md-1 padding-top-10px">
+		         <img ng-src="https://box8.in/styles/../images/location-white.1a89a293.svg"></img>
+		      </div>
+		      <span class="col-md-6 white-text" ng-bind="CompleteLocationPath"></span>
+			  <div class="col-md-5 white-text">
+			    <input type="button" class="btn-as-text" ng-click="ChangeLocation()" value="EDIT"></input>
+			   </div>
 		   </div>
+		</div>
+		<div class="col-md-12 horizontal-scroller">
+		<div class="col-md-1 col-sm1-1"><i class="left-arrow" ng-click="SelectPrevCategory()"> </i></div>
+		<div class="col-md-10 col-sm-10 category-scrollbar">
+		  <ul>
+		    <li class="menu-scroll" ng-repeat="category in CategoryList" >
+			   <a ng-bind="category.CategoryName" class="category-horiezontal" ng-click="ShowItems(category.CategoryID)"></a>
+			</li>
+		  </ul>
+		</div>
+		<div class="col-md-1 col-sm-1"><i class="right-arrow" ng-click="SelectNextCategory()" > </i></div>
 		</div>
    </div>   
 </div>
@@ -223,6 +305,7 @@ height:30px;
 	$scope.ParentLocation="";
 	$scope.CompleteLocationPath="";
 	$scope.LocationID=0;
+	$scope.SelectedCategory=0;
 	$scope.LocationList=[
 	          {ID:1,name:"Bangalore",Type:"Main",ParentID:0},
 			  {ID:2,name:"Chennai",Type:"Main",ParentID:0},
@@ -344,19 +427,29 @@ height:30px;
 	        $scope.ShowLocationSearchDiv=false;
 	        $scope.ShowMenuList=false;
 			$scope.ShowItemList=true;
-			//$scope.CompleteLocationPath=$scope.ShowDeliveryLocationPath();
+			$scope.CompleteLocationPath=$scope.ShowDeliveryLocationPath();
 	    }
-	 $scope.ShowDeliveryLocationPath=function($filter,$scope){
+	 $scope.ShowDeliveryLocationPath=function(){
 	        var finalLocationName="";
 	        var childLocation= $filter("filter")($scope.LocationList,{ID: $scope.LocationID});
-			if(childLocation !=undefined && childLocation.name.length>0){
-			    finalLocationName += childLocation.name ;
-				while(childLocation.ParentID==0)
+			if(childLocation !=undefined && childLocation != null  && childLocation.length > 0){
+			    finalLocationName += childLocation[0].name ;
+				while(childLocation[0].ParentID!=0)
 				{
-				    childLocation= $filter("filter")($scope.LocationList,{ID: childLocation.ParentID});
-					finalLocationName += ", "+childLocation.name ;
+				    childLocation= $filter("filter")($scope.LocationList,{ID: childLocation[0].ParentID});
+					if(childLocation !=undefined && childLocation != null  && childLocation.length > 0){
+					finalLocationName += ", "+childLocation[0].name ;
+					}
 				}
 			}
+			return finalLocationName;
+	    }
+	$scope.ChangeLocation=function(){
+	         
+	    }
+	$scope.SelectPrevCategory=function(){
+	    }
+	$scope.SelectNextCategory=function(){
 	    }
 	}]);
 	
@@ -367,23 +460,6 @@ height:30px;
 	        template:"<h3>What would you like to eat today ?</h3>"
 	       }
 	});
-	app.directive("completeLocation",['$filter','$scope',function($filter,$scope){
-	    return {
-		   //restrict:"A",
-		   template: function($filter,$scope){
-	                           var finalLocationName="";
-	                           var childLocation= $filter("filter")($scope.LocationList,{ID: $scope.LocationID});
-			                  if(childLocation !=undefined && childLocation.name.length>0){
-			                           finalLocationName += childLocation.name ;
-				                       while(childLocation.ParentID==0)
-				                         {
-				                            childLocation= $filter("filter")($scope.LocationList,{ID: childLocation.ParentID});
-					                        finalLocationName += ", "+childLocation.name ;
-				                         }
-			                        }
-			                return finalLocationName;
-	                    }
-	        }
-	}]);
+	
 </script>
 </html>  
