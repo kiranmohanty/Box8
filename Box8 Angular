@@ -570,7 +570,7 @@ i{
 	      $scope.showSideCart=false;
 	   }
 	$scope.ShowAddButtoon=function(itemID){	       
-		   if($filter('filter')($scope.ItemsInBasket,{ItemID: itemID})){
+		   if($filter('filter')($scope.ItemsInBasket,{ItemID: itemID}).length>0){
 		      return false;
 		   }
 		   else{
