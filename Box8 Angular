@@ -15,6 +15,9 @@
  .padding-left-5px{
     padding-left:5px;
  }
+ .padding-left-15px{
+    padding-left:15px;
+ }
  .home1{
     height: 55px;
     border: none;
@@ -108,17 +111,25 @@
 }
  a:hover{
     outline: none;
+    text-decoration: none !important;
+	color: black;	
+}
+category-horiezontal:hover{
+    outline: none;
 }
 .text-center{
     text-align: center;
 }
-.menuImage{
-    margin-bottom: 30px!important;
-	box-shadow: 6px 6px 10px #888;
+.menuImage{    
     padding: 0;
-	height: 218px;
-    width:373px;
-	cursor:pointer;
+	height: 25%;
+    width:100%;	
+}
+.cursor-pointer{
+   cursor:pointer;
+}
+.shadow-box{
+    box-shadow: 6px 6px 10px #888;
 }
 .menuText{
     margin-top: -64px;
@@ -178,27 +189,80 @@
     text-decoration:none;
 	font-weight:500;
 }
-.left-arrow {
-    position: relative;
-    top: 1px;
-    display: inline-block;
-    font-family: 'Glyphicons Halflings';
-    font-weight: 400;
-    line-height: 1;
-    -webkit-font-smoothing: antialiased;
-}
-.right-arrow{
-    position: relative;
-    top: 1px;
-    display: inline-block;
-    font-family: 'Glyphicons Halflings';
-    font-weight: 400;
-    line-height: 1;
-    -webkit-font-smoothing: antialiased;
-}
+
 .left-arrow ,.right-arrow{
      color: #da3939;
 	 cursor:pointer;
+}
+.vertical-right-divider{
+     border-right:1px solid #333;
+}
+.vertical-left-divider{
+    border-left:1px solid #333;
+}
+i{
+    cursor:pointer;
+}
+.padding{
+   padding-left:4px;
+   padding-right:4px;
+   padding-bottom:4px;
+   padding-top:4px;
+
+}
+.margin-bottom-30px{
+   margin-bottom:30px !important;
+}
+.veg{
+      background: url(https://box8.in/styles/../images/veg.62b68100.png) no-repeat;
+}
+.non-veg{
+   background: url(https://box8.in/styles/../images/non-veg.e60edd55.png) no-repeat;
+}
+.veg,.non-veg{
+    position: absolute;
+    right: 20px;
+    top: 265px;
+    width: 16px;
+    height: 16px;
+}
+.headerFont{
+   font-size:18px;
+   font-weight:500;
+}
+.padding-left-zero{
+    padding-left:0px;
+}
+.padding-bottom-10px{
+     padding-bottom:10px;
+	 padding-top:10px;
+}
+.padding-right-5px{
+     padding-right: 5px;
+}
+.orange-color{
+    color:#da3939;
+}
+.active{
+   font-weight:500; 
+   background-color: #da3939;   
+}
+.height-3{
+   height: 10px;
+}
+.side-card{
+    position: fixed;
+    top: 0;
+    right: 0;    
+    background: #fff;
+    border-left: 1px solid #e8ebe9;
+    z-index: 999;
+	height: 95%;
+    margin-top: 10%;
+}
+.open-side-card{
+    animation: sidecart-slide-in .5s;
+    right: 0;
 }
 </style>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
@@ -255,7 +319,7 @@
 		 <div class="col-md-8">
 		    <div class="col-md-12">
 			    <div  class="col-md-4 margin-top-13px" ng-repeat="category in CategoryList">
-				   <img ng-src="{{category.Image}}" alt="{{category.CategoryName}}" class="menuImage" ng-click="ShowItems(category.CategoryID)"></img>
+				   <img ng-src="{{category.Image}}" alt="{{category.CategoryName}}" class="menuImage shadow-box cursor-pointer margin-bottom-30px" ng-click="ShowItems(category.CategoryID)"></img>
 				   <div ng-bind="category.CategoryName" class="menuText"></div>
 				</div>
 			</div>
@@ -276,16 +340,57 @@
 			   </div>
 		   </div>
 		</div>
-		<div class="col-md-12 horizontal-scroller">
-		<div class="col-md-1 col-sm1-1"><i class="left-arrow" ng-click="SelectPrevCategory()"> </i></div>
-		<div class="col-md-10 col-sm-10 category-scrollbar">
+		<div class="col-md-12 horizontal-scroller category-scrollbar">
+		<div class="col-md-1 col-sm1-1 vertical-right-divider margin-top-20px"><i class="glyphicon glyphicon-chevron-left orange-color" ng-click="SelectPrevCategory()"> </i></div>
+		<div class="col-md-10 col-sm-10 ">
 		  <ul>
-		    <li class="menu-scroll" ng-repeat="category in CategoryList" >
-			   <a ng-bind="category.CategoryName" class="category-horiezontal" ng-click="ShowItems(category.CategoryID)"></a>
+		    <li class="menu-scroll" ng-repeat="category in CategoryList" ng-class="category.CategoryID==SelectedCategory?'active':''" >
+			   
+			   <a ng-bind="category.CategoryName" class="category-horiezontal" ng-click="ShowItems(category.CategoryID)" >			   
+			   </a>
+			  
 			</li>
 		  </ul>
 		</div>
-		<div class="col-md-1 col-sm-1"><i class="right-arrow" ng-click="SelectNextCategory()" > </i></div>
+		<div class="col-md-1 col-sm-1 vertical-left-divider margin-top-20px"><i class="glyphicon glyphicon-chevron-right orange-color" ng-click="SelectNextCategory()" > </i></div>
+		</div>
+		<div class="white-smoke" ng-class="showSideCart>0 ?'col-md-11 col-sm-11':'col-md-12 col-sm12'">
+		    <div class="col-md-1 col-m-1"></div>
+			<div class="col-md-10 col-m-10">
+			    <div class="col-md-4 col-m-4 margin-top-20px padding " ng-repeat="item in ShowAvailableMenuList()">
+				<div class="shadow-box">
+				   <img ng-src="{{item.ItemImage}}" alt="{{item.MenuName}}" class="menuImage"></img>
+				   <div  class="row padding-left-15px margin-top-13px">
+				      <span ng-bind="item.MenuName" class="col-md-12 col-sm-12 headerFont"></span>
+					  <div ng-class="item.ItemType==0? 'veg padding-right-5px':'non-veg padding-right-5px'"></div>
+					  <span class="col-md-12 col-sm-12 height-3" ng-bind="item.MenuDescription | cut: 40:'..'" data-toggle="tooltip" title="{{item.MenuDescription}}"></span>
+					  <div class="col-md-12 col-sm-12 padding-bottom-10px">
+					     <div class="pull-left">
+					     <span  ng-bind="item.Price | currency : '₹' : 0" ></span>
+						 </div>
+						 <div class="pull-right padding-right-5px" ng-show="ShowAddButtoon(item.ItemID)">
+						 <button class="btn btn-primary" ng-click="AddItemToBasket(item.ItemID,item.MenuName)" >+ADD</button>
+						 </div>
+						 <div class="pull-right padding-right-5px">
+						    
+						 </div>
+						 
+					  </div>
+				   </div>
+				  </div>
+				</div>
+			</div>
+			<div class="col-md-1 col-m-1"></div>
+		</div>
+		<div class="side-card col-md-1 open-side-card" ng-show="showSideCart">
+		  <div class="row col-md-12 col-sm-12">
+		     <div class="col-md-6 col-sm-6">
+			     <h3>Your cart</h3>
+			 </div>
+			 <div class="col-md-6 col-sm-6">
+			    <img ng-src="https://box8.in/images/close.47cfd871.png" alt="" ng-click="CloseSideCard()" style="cursor: pointer"></img>
+			 </div>
+		  </div>
 		</div>
    </div>   
 </div>
@@ -306,6 +411,8 @@
 	$scope.CompleteLocationPath="";
 	$scope.LocationID=0;
 	$scope.SelectedCategory=0;
+	$scope.ItemsInBasket=[];
+	$scope.showSideCart=false;
 	$scope.LocationList=[
 	          {ID:1,name:"Bangalore",Type:"Main",ParentID:0},
 			  {ID:2,name:"Chennai",Type:"Main",ParentID:0},
@@ -354,9 +461,9 @@
 			   {ItemID :17,CategoryID :6,ItemType :1,MenuName :"Chicken Seekh Kebab Sandwich",MenuDescription :"Juicy spicy kebabs in a delicious tikka sauce",Price :108,ItemImage :"http://assets.box8.co.in/picture_resolutions/photos/000/000/424/original/Chicken-Seekh-Kebab-Sandwich.jpg?1447239743"},
 			   {ItemID :18,CategoryID :6,ItemType :1,MenuName :"Tandoori Chicken Sandwich ",MenuDescription :"The greatest chicken sandwich ever made. Seriously!",Price :148,ItemImage :"http://assets.box8.co.in/picture_resolutions/photos/000/000/426/original/Tandoori-Chicken-Sandwich.jpg?1447239873"},
 			   {ItemID :19,CategoryID :6,ItemType :0,MenuName :"Veggie Delight Sandwich",MenuDescription :"Loads of veggies with olives & jalapenos",Price :98,ItemImage :"http://assets.box8.co.in/picture_resolutions/photos/000/000/413/original/Veggie-Delight-Sandwich.jpg?1447238965"},
-			   {ItemID :20,CategoryID :7,ItemType :0,MenuName :"Farmer's Market Salad",MenuDescription :"Mushrooms, baby corn, olives, jalapenos with salad dressing",Price :138,ItemImage :"http://assets.box8.co.in/picture_resolutions/photos/000/000/476/original/Farmer's-Market-Salad.jpg?1448014807"},
-			   {ItemID :21,CategoryID :7,ItemType :1,MenuName :"Char-Grilled Chicken Salad",MenuDescription :"Tandoor grilled chicken & exotic veggies in a spiced desi dressing",Price :168,ItemImage :"http://assets.box8.co.in/picture_resolutions/photos/000/000/478/original/Char-Grilled-Chicken-Salad.jpg?1448014706"},
-			   {ItemID :22,CategoryID :7,ItemType :0,MenuName :"Paneer Tossed Salad",MenuDescription :"Paneer, olives, jalapenos, veggies in an Indian style dressing",Price :178,ItemImage :"http://assets.box8.co.in/picture_resolutions/photos/000/000/477/original/Tossed-Paneer-Salad.jpg?1448014770"},
+			   {ItemID :20,CategoryID :7,ItemType :0,MenuName :"Farmer's Market Salad",MenuDescription :"Mushrooms, baby corn, olives, jalapenos with salad dressing",Price :138,ItemImage :"http://assets.box8.co.in/picture_resolutions/photos/000/000/476/original/1110-X-810-Ice-Cream.jpg?1481639134"},
+			   {ItemID :21,CategoryID :7,ItemType :1,MenuName :"Char-Grilled Chicken Salad",MenuDescription :"Tandoor grilled chicken & exotic veggies in a spiced desi dressing",Price :168,ItemImage :"http://assets.box8.co.in/picture_resolutions/photos/000/000/478/original/1110-X-810-Ice-Cream.jpg?1481638830"},
+			   {ItemID :22,CategoryID :7,ItemType :0,MenuName :"Paneer Tossed Salad",MenuDescription :"Paneer, olives, jalapenos, veggies in an Indian style dressing",Price :178,ItemImage :"http://assets.box8.co.in/picture_resolutions/photos/000/000/477/original/1110-X-810-Ice-Cream.jpg?1481639453"},
 			   {ItemID :23,CategoryID :8,ItemType :0,MenuName :"Tawa Paratha [Pack of 2]",MenuDescription :"",Price :38,ItemImage :"http://assets.box8.co.in/picture_resolutions/photos/000/000/496/original/Tawa-Paratha.jpg?1448015912"},
 			   {ItemID :24,CategoryID :8,ItemType :0,MenuName :"Subz Handi Curry",MenuDescription :"Exotic mix veg in mughlai style gravy",Price :188,ItemImage :"http://assets.box8.co.in/picture_resolutions/photos/000/000/456/original/Subz-Handi-Curry.jpg?1447242249"},
 			   {ItemID :25,CategoryID :8,ItemType :1,MenuName :"Chicken Mughlai Curry",MenuDescription :"Delicious fusion of tandoori chicken & our signature spicy gravy",Price :238,ItemImage :"http://assets.box8.co.in/picture_resolutions/photos/000/000/462/original/Chicken-Mughlai-Curry.jpg?1447242614"},
@@ -428,6 +535,7 @@
 	        $scope.ShowMenuList=false;
 			$scope.ShowItemList=true;
 			$scope.CompleteLocationPath=$scope.ShowDeliveryLocationPath();
+			$scope.SelectedCategory=categoryID;
 	    }
 	 $scope.ShowDeliveryLocationPath=function(){
 	        var finalLocationName="";
@@ -451,6 +559,24 @@
 	    }
 	$scope.SelectNextCategory=function(){
 	    }
+	$scope.ShowAvailableMenuList=function(){
+	      return $filter('filter')($scope.Category_Items_List,{CategoryID: $scope.SelectedCategory});
+	   }
+	$scope.AddItemToBasket=function(itemID,itemName){
+	      $scope.ItemsInBasket.push({ItemID :itemID,MenuName :itemName, Quantity: 1});
+		  $scope.showSideCart=true;
+	   }
+	$scope.CloseSideCard=function(){
+	      $scope.showSideCart=false;
+	   }
+	$scope.ShowAddButtoon=function(itemID){	       
+		   if($filter('filter')($scope.ItemsInBasket,{ItemID: itemID})){
+		      return false;
+		   }
+		   else{
+		      return true;
+		   }
+	  }
 	}]);
 	
 	//Registering directive
@@ -459,6 +585,22 @@
 	        restrict: 'A',
 	        template:"<h3>What would you like to eat today ?</h3>"
 	       }
+	});
+	app.filter('cut',function(){
+	  return function(value,maxLength,trailingString){
+	       if(!value) 
+		      return '';
+		   if(value.length<maxLength)
+		      return value;
+			else{
+			   var trailingStringLength=0;
+			   if(trailingString)
+			        trailingStringLength=trailingString.length;
+			  value= value.substr(0,maxLength-trailingStringLength);
+			  return value+trailingString;
+	        }
+		return '';
+		}
 	});
 	
 </script>
