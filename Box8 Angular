@@ -220,11 +220,11 @@ i{
    background: url(https://box8.in/styles/../images/non-veg.e60edd55.png) no-repeat;
 }
 .veg,.non-veg{
-    position: absolute;
-    right: 20px;
-    top: 265px;
-    width: 16px;
-    height: 16px;
+    position: relative;
+    right: -89%;
+    top: 16%;
+    width: 11%;
+    height: 5%;
 }
 .headerFont{
    font-size:18px;
@@ -258,11 +258,28 @@ i{
     border-left: 1px solid #e8ebe9;
     z-index: 999;
 	height: 95%;
-    margin-top: 10%;
+	margin-top:2%;
 }
 .open-side-card{
     animation: sidecart-slide-in .5s;
     right: 0;
+}
+.text{
+   text-transform:uppercase;
+   font-size:18px;
+}
+.text-content{
+    color: #da3939;
+    position: absolute;
+    text-align: center;
+    top: 25%;
+    width: 20%;
+    height: auto;
+    margin-left: 35%;
+    opacity: .9;
+}
+.padding-zero{
+   padding:0px;
 }
 </style>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
@@ -359,9 +376,10 @@ i{
 			<div class="col-md-10 col-m-10">
 			    <div class="col-md-4 col-m-4 margin-top-20px padding " ng-repeat="item in ShowAvailableMenuList()">
 				<div class="shadow-box">
-				   <img ng-src="{{item.ItemImage}}" alt="{{item.MenuName}}" class="menuImage"></img>
+				   <img ng-src="{{item.ItemImage}}" alt="{{item.MenuName}}" class="menuImage" ng-style="GetQuantityInBasket(item.ItemID).Quantity>0 ? {'opacity':'0.3'}:{'opacity':'1'}" ></img>
+				   <span class="text-content" ng-if="GetQuantityInBasket(item.ItemID).Quantity>0"  ><span class="headerFont" ng-bind="GetQuantityInBasket(item.ItemID).Quantity"></span> </span>
 				   <div  class="row padding-left-15px margin-top-13px">
-				      <span ng-bind="item.MenuName" class="col-md-12 col-sm-12 headerFont"></span>
+				      <strong> <span ng-bind="item.MenuName" class="col-md-12 col-sm-12 headerFont"></span></strong>
 					  <div ng-class="item.ItemType==0? 'veg padding-right-5px':'non-veg padding-right-5px'"></div>
 					  <span class="col-md-12 col-sm-12 height-3" ng-bind="item.MenuDescription | cut: 40:'..'" data-toggle="tooltip" title="{{item.MenuDescription}}"></span>
 					  <div class="col-md-12 col-sm-12 padding-bottom-10px">
@@ -369,10 +387,12 @@ i{
 					     <span  ng-bind="item.Price | currency : '₹' : 0" ></span>
 						 </div>
 						 <div class="pull-right padding-right-5px" ng-show="ShowAddButtoon(item.ItemID)">
-						 <button class="btn btn-primary" ng-click="AddItemToBasket(item.ItemID,item.MenuName)" >+ADD</button>
+						 <button class="btn btn-primary" ng-click="AddItemToBasket(item.ItemID,item.MenuName)"  >+ADD</button>
 						 </div>
-						 <div class="pull-right padding-right-5px">
-						    
+						 <div class="pull-right padding-right-5px" ng-show="!ShowAddButtoon(item.ItemID)" >
+						    <input type="button" value="-" ng-click="ReduceQuantity(item.ItemID)"/>
+							<span ng-bind="GetQuantityInBasket(item.ItemID).Quantity" ></span>
+							<input type="button" value="+" ng-click="IncreaseQuantity(item.ItemID)" />
 						 </div>
 						 
 					  </div>
@@ -382,12 +402,12 @@ i{
 			</div>
 			<div class="col-md-1 col-m-1"></div>
 		</div>
-		<div class="side-card col-md-1 open-side-card" ng-show="showSideCart">
-		  <div class="row col-md-12 col-sm-12">
-		     <div class="col-md-6 col-sm-6">
-			     <h3>Your cart</h3>
+		<div class="side-card col-md-1 open-side-card" ng-show="showSideCart" >
+		  <div class="row">
+		     <div class="col-md-8 col-sm-8">
+			     <span class="text">Your cart</span>
 			 </div>
-			 <div class="col-md-6 col-sm-6">
+			 <div class="col-md-4 col-sm-4">
 			    <img ng-src="https://box8.in/images/close.47cfd871.png" alt="" ng-click="CloseSideCard()" style="cursor: pointer"></img>
 			 </div>
 		  </div>
@@ -397,7 +417,7 @@ i{
 </body>
 <script type="text/javascript">
     var app=angular.module("Box8App",['ngAnimate']);
-	app.controller("LocateMeController",['$scope','$filter',function($scope,$filter){
+	app.controller("LocateMeController",['$scope','$filter','ArrayService',function($scope,$filter,ArrayService){
 	
 	//Properties
 	$scope.LocateMePlaceHolder="Delivery Location eg.Bangalore";
@@ -576,16 +596,44 @@ i{
 		   else{
 		      return true;
 		   }
-	  }
+	   }
+	 $scope.ReduceQuantity=function(itemID){
+	       var itemObject=$filter('filter')($scope.ItemsInBasket,{ItemID:itemID});
+	      if(itemObject.length>0 && itemObject[0].Quantity>0)
+		  {
+		     $filter('filter')($scope.ItemsInBasket,{ItemID:itemID})[0].Quantity -=1;
+			 if(itemObject[0].Quantity==0){
+			    ArrayService.DeleteItemFromArray($scope.ItemsInBasket,itemObject[0]);
+			 }
+		  }
+	   }
+	 $scope.IncreaseQuantity=function(itemID){
+	      var itemObject=$filter('filter')($scope.ItemsInBasket,{ItemID:itemID});
+	      if(itemObject.length>0)
+		  {
+		     $filter('filter')($scope.ItemsInBasket,{ItemID:itemID})[0].Quantity +=1;
+		  }
+	   }
+	 $scope.GetQuantityInBasket=function(itemID){
+	      var itemObject=$filter('filter')($scope.ItemsInBasket,{ItemID:itemID});
+	      if(itemObject.length>0)
+		  {
+		    return $filter('filter')($scope.ItemsInBasket,{ItemID:itemID})[0];
+		  }
+		  else{
+		    return {ItemID :0,MenuName :'', Quantity: 0};
+		  }
+	   }
 	}]);
 	
-	//Registering directive
+	//Registering directive - return object
 	app.directive("menuListHeader",function(){
 	   return{
 	        restrict: 'A',
 	        template:"<h3>What would you like to eat today ?</h3>"
 	       }
 	});
+	//Filter - returns a function
 	app.filter('cut',function(){
 	  return function(value,maxLength,trailingString){
 	       if(!value) 
@@ -603,5 +651,17 @@ i{
 		}
 	});
 	
+	//Service - return object (with properties and/or functions)
+	app.factory('ArrayService',function(){
+	    return {
+		   DeleteItemFromArray: function(arrayObject,itemObject){
+		         var index=arrayObject.indexOf(itemObject);
+				 if(index>=0){
+				    arrayObject.splice(index,1);
+				 }
+				 //return arrayObject;
+		    }
+		}
+	});
 </script>
 </html>  
