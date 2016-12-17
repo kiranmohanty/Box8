@@ -2,12 +2,13 @@
 <header>
 <style>
  .imgSmall{
-    height: 50px;
+    height: 8%;
+    width: 61%;
  }
 .imgLarge{
-    height: 700px;
-    width:1870px;
-    padding-left:0px;
+    height: 81%;
+    width: 100%;
+    padding-left: 0%;
  }
 .margin-top-20px{
     margin-top:20px;
@@ -19,40 +20,31 @@
     padding-left:15px;
  }
  .home1{
-    height: 55px;
+    height: 8%;
     border: none;
-    margin-left: 550px;
-    width: 85%;
-	margin-top: -400px;
-	padding-left:30px ;
+    margin-left: 96%;    
+    margin-top: -70%;
+	width:100%;
  }
   .home2{
-    height: 55px;
+    height: 8%;
     border: none;
-    margin-left: 660px;
+    margin-left: 108%;
     width: 85%;
-	margin-top: -55px;
-	padding-left:30px ;
+	margin-top: -9%;	
  }
 
- .locateMe1{
-    height: 55px;
-    border: none;
-    margin-left: 1129px;
-    width: 15%;
-	margin-top: -400px;
-	padding-left:30px;
-	background-color:#da3939;
-	cursor:default;
+ .locateMe1{    
+    height: 8%;    
+    margin-left: 179%;    
+    margin-top: -70%;    
+    background-color: #da3939;
  }
   .locateMe2{
-    height: 55px;
-    border: none;
-    margin-left: 1125px;
-    width: 15%;
-	margin-top: -55px;
-	padding-left:30px;
-	background-color:#da3939;
+    height: 8%;    
+    margin-left: 174%;    
+    margin-top: -10%;    
+    background-color: #da3939;
 	cursor:pointer;
  }
  .sign-up{
@@ -67,13 +59,11 @@
 	width:10px;
 	background-color:white;
     border: none;
-    margin-left: 550px;
-    width: 70%;
-	margin-top: -350px;
-	padding-left:30px;
-	margin-top:-394px;
+    margin-left: 61%;
+    width: 70%;	
+	margin-top:-60%;
  }
-.input-2{
+.input-2{       
     border: none;
 	padding: 2px 2px 0 5px;
     border-radius: 3px;
@@ -81,27 +71,25 @@
 	color: #fff;
 	float: left;
 	text-align: center;
-    font-size: 12px;	
-	height:25px;
+    font-size: 10px;	
+	height:37%;
 	width: 100%;
-    margin-top:29px;	
+    margin-top:57%;	
 }
 .div-location{
     border: none;
-	background: white;
-	margin-top: -399px;
-	margin-left: 550px;
-	height:55px;
-	width: 13%;	
+    background: white;
+    margin-top: -70%;
+    margin-left: 96%;
+    height: 7%;
+    width: 12%;
 }
-.divMain{
-    height: 55px;
+.divMain{    
     border: none;
-    margin-left: -13px;
+    margin-left: -33%;
     width: 100%;
-	margin-top: -26px;
-	padding-left:20px ;
-	background-color:white;
+    margin-top: 7%;    
+    background-color: white;
 }
 .shift_right{
      float:right;
@@ -122,7 +110,7 @@ category-horiezontal:hover{
 }
 .menuImage{    
     padding: 0;
-	height: 25%;
+	height: 42%;
     width:100%;	
 }
 .cursor-pointer{
@@ -132,9 +120,9 @@ category-horiezontal:hover{
     box-shadow: 6px 6px 10px #888;
 }
 .menuText{
-    margin-top: -64px;
+    margin-top: -19%;
     padding-left: 20px;
-    font-size: 21px;
+    font-size: 18px;
     color: #fff;
 	text-transform: uppercase;
 }
@@ -176,8 +164,12 @@ category-horiezontal:hover{
 }
 .menu-scroll {
     display: inline-block;
-    padding-left: 25px;
-    padding-right: 25px;
+    text-align: center;
+}
+.menu-scroll-horiezontal {
+    display: inline-block;
+    padding-left: 25px; 
+    padding-right: 25px; 
     text-align: center;
 }
 .category-horiezontal{
@@ -289,28 +281,38 @@ i{
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 </header>
 <body ng-app="Box8App">
-<div class="col-md-12  margin-top-20px" ng-controller="LocateMeController">
-     <div class="header col-md-12" > 
-	 <div class="col-md-5">
-	   <div class="col-md-4 padding-left-zero">
-	   <img class="imgSmall" src="https://box8.in/images/logo.6d41ab8b.png" onclick="return false;"/>
+<div class="margin-top-20px" ng-controller="LocateMeController" style="width:100%;">
+     <div class="container-fluid" > 
+	 <!-- <div class="col-md-5"> -->
+	   <!-- <div class="col-md-4 padding-left-zero"> -->
+	   <div class="navbar-header ">
+	   <img class="imgSmall " src="https://box8.in/images/logo.6d41ab8b.png" onclick="return false;"/>
 	   </div>
-	  </div>
-    <div class="col-md-7">	
-       <div class="col-md-6"></div>	
-	   <div class="col-md-1"><a class="btn" href="#">Home</a></div>
-	   <div class="col-md-1"><a  class="btn" href="#">About Us</a></div>
-	   <div class="col-md-1"><a  class="btn" href="#">We'r Hiring</a></div>
-	   <div class="col-md-1"><a class="btn padding-left-5px" href="#">Offers</a></div>
-	   <div class="col-md-1"><a  class="btn" href="#">Sign In</a></div>
-	   <div class="col-md-1"><a  class="btn sign-up" href="#">Sign Up</a></div>
-	 </div>
+	   <ul class="navbar-nav navbar-right padding-right-5px">
+	     <li class="menu-scroll"><a class="btn" href="#">Home</a></li>
+		 <li class="menu-scroll"><a  class="btn" href="#">About Us</a></li>
+		 <li class="menu-scroll"><a  class="btn" href="#">We'r Hiring</a></li>
+		 <li class="menu-scroll"><a class="btn padding-left-5px" href="#">Offers</a></li>
+		 <li class="menu-scroll"><a  class="btn" href="#">Sign In</a></li>
+		 <li class="menu-scroll"><a  class="btn sign-up" href="#">Sign Up</a></li>
+		</ul>
+	   <!-- </div> -->
+	  <!-- </div> -->
+    <!-- <div class="col-md-7">	 -->
+       <!-- <div class="col-md-6"></div>	 -->
+	   <!-- <div class="col-md-1"><a class="btn" href="#">Home</a></div> -->
+	   <!-- <div class="col-md-1"><a  class="btn" href="#">About Us</a></div> -->
+	   <!-- <div class="col-md-1"><a  class="btn" href="#">We'r Hiring</a></div> -->
+	   <!-- <div class="col-md-1"><a class="btn padding-left-5px" href="#">Offers</a></div> -->
+	   <!-- <div class="col-md-1"><a  class="btn" href="#">Sign In</a></div> -->
+	   <!-- <div class="col-md-1"><a  class="btn sign-up" href="#">Sign Up</a></div> -->
+	 <!-- </div> -->
      </div>
 	 
 	 
-	 <div class="col-md-12 padding-left-zero" ng-show="ShowLocationSearchDiv">
-	  <img class="imgLarge padding-left-zero col-md-12" src="https://box8.in/images/banner/B8-FINAL-WEB-BANNER.d975a91b.jpg" href="X"/>
-	 <div style="padding-top:80px;" class="col-md-6">
+	 <div class="padding-left-zero" ng-show="ShowLocationSearchDiv" style="width:100%;">
+	  <img class="imgLarge" src="https://box8.in/images/banner/B8-FINAL-WEB-BANNER.d975a91b.jpg" href="X"/>
+	 <div style="padding-top:7%" class="col-md-6">
 	 
 	 <div class="col-md-12 divMain" > 
 	 <div class="div-location" ng-show="ParentLocation.length>0">
@@ -332,16 +334,16 @@ i{
 
    <div class="col-md-12 white-smoke" ng-show="ShowMenuList" >
          <span class="col-md-12 text-center" menu-List-Header></span> 
-		 <div class="col-md-2"></div>
-		 <div class="col-md-8">
-		    <div class="col-md-12">
+		 <div class="col-md-1"></div>
+		 <div class="col-md-10">
+		    
 			    <div  class="col-md-4 margin-top-13px" ng-repeat="category in CategoryList">
 				   <img ng-src="{{category.Image}}" alt="{{category.CategoryName}}" class="menuImage shadow-box cursor-pointer margin-bottom-30px" ng-click="ShowItems(category.CategoryID)"></img>
 				   <div ng-bind="category.CategoryName" class="menuText"></div>
 				</div>
-			</div>
+			
 		 </div>
-		 <div class="col-md-2"></div>
+		 <div class="col-md-1"></div>
    </div>
 
    <div class="col-md-12" ng-show="ShowItemList">
@@ -361,7 +363,7 @@ i{
 		<div class="col-md-1 col-sm1-1 vertical-right-divider margin-top-20px"><i class="glyphicon glyphicon-chevron-left orange-color" ng-click="SelectPrevCategory()"> </i></div>
 		<div class="col-md-10 col-sm-10 ">
 		  <ul>
-		    <li class="menu-scroll" ng-repeat="category in CategoryList" ng-class="category.CategoryID==SelectedCategory?'active':''" >
+		    <li class="menu-scroll-horiezontal" ng-repeat="category in CategoryList" ng-class="category.CategoryID==SelectedCategory?'active':''" >
 			   
 			   <a ng-bind="category.CategoryName" class="category-horiezontal" ng-click="ShowItems(category.CategoryID)" >			   
 			   </a>
