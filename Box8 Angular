@@ -214,13 +214,23 @@ i{
 .veg,.non-veg{
     position: relative;
     right: -89%;
-    top: 16%;
+    top: -8%;
     width: 11%;
-    height: 5%;
+    height: 8%;
 }
 .headerFont{
    font-size:18px;
    font-weight:500;
+}
+.opacity-font{
+   font-size:22px;
+   font-weight:500;
+   font:bold;
+}
+.cartFont
+   font-size:12px;
+   font-weight:500;
+   font:bold;
 }
 .padding-left-zero{
     padding-left:0px;
@@ -257,8 +267,9 @@ i{
     right: 0;
 }
 .text{
-   text-transform:uppercase;
+   text-transform:uppercase; 
    font-size:18px;
+   padding-left:10%;
 }
 .text-content{
     color: #da3939;
@@ -373,23 +384,23 @@ i{
 		</div>
 		<div class="col-md-1 col-sm-1 vertical-left-divider margin-top-20px"><i class="glyphicon glyphicon-chevron-right orange-color" ng-click="SelectNextCategory()" > </i></div>
 		</div>
-		<div class="white-smoke" ng-class="showSideCart>0 ?'col-md-11 col-sm-11':'col-md-12 col-sm12'">
-		    <div class="col-md-1 col-m-1"></div>
-			<div class="col-md-10 col-m-10">
+		<div class="white-smoke" ng-class="showSideCart>0 ?'col-md-10 col-sm-10':'col-md-12 col-sm12'">
+		    
+			<div class="col-md-12 col-m-12">
 			    <div class="col-md-4 col-m-4 margin-top-20px padding " ng-repeat="item in ShowAvailableMenuList()">
 				<div class="shadow-box">
 				   <img ng-src="{{item.ItemImage}}" alt="{{item.MenuName}}" class="menuImage" ng-style="GetQuantityInBasket(item.ItemID).Quantity>0 ? {'opacity':'0.3'}:{'opacity':'1'}" ></img>
-				   <span class="text-content" ng-if="GetQuantityInBasket(item.ItemID).Quantity>0"  ><span class="headerFont" ng-bind="GetQuantityInBasket(item.ItemID).Quantity"></span> </span>
+				   <span class="text-content" ng-if="GetQuantityInBasket(item.ItemID).Quantity>0"  ><span class="opacity-font" ng-bind="GetQuantityInBasket(item.ItemID).Quantity"></span> </span>
 				   <div  class="row padding-left-15px margin-top-13px">
 				      <strong> <span ng-bind="item.MenuName" class="col-md-12 col-sm-12 headerFont"></span></strong>
 					  <div ng-class="item.ItemType==0? 'veg padding-right-5px':'non-veg padding-right-5px'"></div>
-					  <span class="col-md-12 col-sm-12 height-3" ng-bind="item.MenuDescription | cut: 40:'..'" data-toggle="tooltip" title="{{item.MenuDescription}}"></span>
+					  <span class="col-md-12 col-sm-12 height-3" ng-bind="item.MenuDescription | cut: 32:'..'" data-toggle="tooltip" title="{{item.MenuDescription}}"></span>
 					  <div class="col-md-12 col-sm-12 padding-bottom-10px">
 					     <div class="pull-left">
 					     <span  ng-bind="item.Price | currency : '₹' : 0" ></span>
 						 </div>
 						 <div class="pull-right padding-right-5px" ng-show="ShowAddButtoon(item.ItemID)">
-						 <button class="btn btn-primary" ng-click="AddItemToBasket(item.ItemID,item.MenuName)"  >+ADD</button>
+						 <button class="btn btn-primary" ng-click="AddItemToBasket(item.ItemID,item.MenuName,item.Price,item.ItemType)"  >+ADD</button>
 						 </div>
 						 <div class="pull-right padding-right-5px" ng-show="!ShowAddButtoon(item.ItemID)" >
 						    <input type="button" value="-" ng-click="ReduceQuantity(item.ItemID)"/>
@@ -402,16 +413,34 @@ i{
 				  </div>
 				</div>
 			</div>
-			<div class="col-md-1 col-m-1"></div>
+			
 		</div>
-		<div class="side-card col-md-1 open-side-card" ng-show="showSideCart" >
+		<div class="side-card col-md-2 open-side-card" ng-show="showSideCart" >
 		  <div class="row">
-		     <div class="col-md-8 col-sm-8">
+		     
 			     <span class="text">Your cart</span>
-			 </div>
-			 <div class="col-md-4 col-sm-4">
+			 
 			    <img ng-src="https://box8.in/images/close.47cfd871.png" alt="" ng-click="CloseSideCard()" style="cursor: pointer"></img>
+			 
+		  </div>
+		  <hr>
+		  <div class="row"  style="padding-left:10%; height:55%; overflow-y:auto;overflow-x:hidden;">
+		  <div ng-repeat="item in ItemsInBasket" style="padding-top:10%;">
+			<span style="width:70%;" class="cartFont" ng-bind="item.MenuName"></span>
+			 <div ng-class="item.Type==0? 'veg padding-right-5px':'non-veg padding-right-5px'" style="width:10%;"></div>
+			 <span  ng-bind="(item.UnitPrice * item.Quantity) | currency : '₹' : 0" style="width:20%;" ></span>
+			 <div class="row pull-right" ng-show="item.Quantity>0" style="margin-right: 2%;">
+			    <input type="button" value="-" ng-click="ReduceQuantity(item.ItemID)"/>
+				<span ng-bind="GetQuantityInBasket(item.ItemID).Quantity" ></span>
+				<input type="button" value="+" ng-click="IncreaseQuantity(item.ItemID)" />
 			 </div>
+			 <hr>
+		</div>
+		  </div>
+		  <hr>
+		  <div class="row">
+		    <span class="col-md-7 col-sm-7 headerFont">Subtotal</span>
+			<span class="col-md-5 col-sm-5 headerFont" ng-bind="GetTotalCardPrice()"></span>
 		  </div>
 		</div>
    </div>   
@@ -584,8 +613,8 @@ i{
 	$scope.ShowAvailableMenuList=function(){
 	      return $filter('filter')($scope.Category_Items_List,{CategoryID: $scope.SelectedCategory});
 	   }
-	$scope.AddItemToBasket=function(itemID,itemName){
-	      $scope.ItemsInBasket.push({ItemID :itemID,MenuName :itemName, Quantity: 1});
+	$scope.AddItemToBasket=function(itemID,itemName,price, itemType){
+	      $scope.ItemsInBasket.push({ItemID :itemID,MenuName :itemName, Quantity: 1, UnitPrice: price, Type:itemType});
 		  $scope.showSideCart=true;
 	   }
 	$scope.CloseSideCard=function(){
@@ -623,8 +652,11 @@ i{
 		    return $filter('filter')($scope.ItemsInBasket,{ItemID:itemID})[0];
 		  }
 		  else{
-		    return {ItemID :0,MenuName :'', Quantity: 0};
+		    return {ItemID :0,MenuName :'', Quantity: 0,UnitPrice:0,Type:''};
 		  }
+	   }
+	  $scope.GetTotalCardPrice=function(){
+	       return ArrayService.CalucatePrice($scope.ItemsInBasket);
 	   }
 	}]);
 	
@@ -662,7 +694,14 @@ i{
 				    arrayObject.splice(index,1);
 				 }
 				 //return arrayObject;
-		    }
+		    },
+			CalucatePrice:function(arrayObject){
+			    var total=0;
+				angular.forEach(arrayObject,function(value,key){
+				   total +=(value.Quantity* value.UnitPrice);
+				});
+				return total;
+			}
 		}
 	});
 </script>
