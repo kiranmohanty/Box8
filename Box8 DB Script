@@ -89,3 +89,47 @@ from City
 where CityName like '%'+@SearchedLocation+'%'
 
 end
+
+
+create procedure GetLocations(@searchCriteria nvarchar(max), @id int,@type nvarchar(max))
+as 
+begin
+
+declare @query nvarchar(max)
+set @query='';
+
+set @query +=
+'select CountryID as ID,CountryName as name, ''Country'' as type
+from Country 
+where CountryName like %'+@searchCriteria+'%'
+
+if (@id>0 and @type='Country')
+begin
+set @query += ' and '
+end
+
+set @query +=
+'union all
+select StateID as id,StateName as name, ''State'' as type
+from State 
+where StateName like %'+@searchCriteria+'%'
+
+set @query +=
+'union all
+select CityID as ID,CityName as name,''City'' as type
+from City 
+where CityName like %'+@searchCriteria+'%'
+
+set @query +=
+'union all
+select SubLocationID as id, SubLocationName as name,''SubLocation'' as  type
+from City_SubLocation 
+where SubLocationName like %'+@searchCriteria+'%'
+
+set @query +=
+'union all 
+select LocalAreaID as id, AreaName as name,''LocalArea'' as type
+from LocalArea 
+where AreaName like %'+@searchCriteria+'%'
+
+end 
