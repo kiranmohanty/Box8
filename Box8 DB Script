@@ -95,41 +95,89 @@ create procedure GetLocations(@searchCriteria nvarchar(max), @id int,@type nvarc
 as 
 begin
 
+declare @locationType int
+
+if(@type ='Country')
+  set @locationType=1
+else if(@type ='State')
+  set @locationType=2
+else if(@type ='City')
+  set @locationType=3
+else if(@type ='SubLocation')
+  set @locationType=4
+else if(@type ='LocalArea')
+  set @locationType=5
+else 
+  set @locationType=0
+
+
+
 declare @query nvarchar(max)
 set @query='';
 
+--local Area selection
 set @query +=
-'select CountryID as ID,CountryName as name, ''Country'' as type
-from Country 
-where CountryName like %'+@searchCriteria+'%'
+         ' select LocalAreaID as id, AreaName as name,''LocalArea'' as type
+           from LocalArea 
+           where AreaName like %'+@searchCriteria+'% '
 
-if (@id>0 and @type='Country')
+
+-- sub location selection
+if(@locationType<4)
 begin
-set @query += ' and '
+  set @query +=
+        ' union all
+          select SubLocationID as id, SubLocationName as name,''SubLocation'' as  type
+          from City_SubLocation 
+          where SubLocationName like %'+@searchCriteria+'% '
+
+if(@locationType=3)
+  set  @query +=' and SubLocationID= '+@id
 end
 
-set @query +=
-'union all
-select StateID as id,StateName as name, ''State'' as type
-from State 
-where StateName like %'+@searchCriteria+'%'
+
+-- City selection
+if(@locationType<3)
+begin
+  set @query +=
+          ' union all
+          select CityID as ID,CityName as name,''City'' as type
+          from City 
+          where CityName like %'+@searchCriteria+'% '
+
+if(@locationType=2)
+  set  @query +=' and CityID= '+@id
+end 
+
+
+-- State selection
+if(@locationType<2)
+begin
 
 set @query +=
-'union all
-select CityID as ID,CityName as name,''City'' as type
-from City 
-where CityName like %'+@searchCriteria+'%'
+           ' union all
+           select StateID as id,StateName as name, ''State'' as type
+           from State 
+           where StateName like %'+@searchCriteria+'% '
 
-set @query +=
-'union all
-select SubLocationID as id, SubLocationName as name,''SubLocation'' as  type
-from City_SubLocation 
-where SubLocationName like %'+@searchCriteria+'%'
+if(@locationType=1)
+  set  @query +=' and StateID= '+@id
+end
 
+
+--- Country selection
+if(@locationType<1)
+begin
 set @query +=
-'union all 
-select LocalAreaID as id, AreaName as name,''LocalArea'' as type
-from LocalArea 
-where AreaName like %'+@searchCriteria+'%'
+          ' union all
+           select CountryID as ID,CountryName as name, ''Country'' as type
+          from Country 
+          where CountryName like %'+@searchCriteria+'% '
+
+if ( @id>0)
+set @query += ' and CountryID='+@id
+
+
+end
 
 end 
